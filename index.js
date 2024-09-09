@@ -1,9 +1,8 @@
-require('dotenv').config()
+require("dotenv").config();
 
 const expres = require("express");
 const { dbConnection } = require("./database/db-config");
-const cors = require('cors')
-
+const cors = require("cors");
 
 // Server creation
 const app = expres();
@@ -17,11 +16,7 @@ app.use(cors());
 dbConnection();
 
 // Routes
-app.get("/", (req, res) => {
-  res.status(200).json({
-    hello: "hola mundo",
-  });
-});
+app.use("/api/users", require("./routes/users"));
 
 // Listen on Port
 app.listen(process.env.PORT, () => {
