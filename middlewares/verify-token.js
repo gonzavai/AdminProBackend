@@ -3,10 +3,8 @@ const jwt = require("jsonwebtoken");
 const verifyToken = (req, res = response, next) => {
   const token = req.header("x-token");
 
-  console.log("#### TOKEN:", token);
-
   if (!token) {
-    res.status(401).json({
+    return res.status(401).json({
       ok: false,
       msg: "Token invalido!",
     });
