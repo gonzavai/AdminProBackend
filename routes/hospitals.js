@@ -18,7 +18,15 @@ const router = Router();
 
 router.get("/", getHospitals);
 
-router.post("/", [], createHospital);
+router.post(
+  "/",
+  [
+    verifyToken,
+    check("name", "The name is mandatory!").not().isEmpty(),
+    validateFields,
+  ],
+  createHospital
+);
 
 router.put("/:id", updateHospital);
 
