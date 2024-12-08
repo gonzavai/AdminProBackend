@@ -1,12 +1,11 @@
 const Hospital = require("../models/hospital");
 const { response } = require("express");
-const bcrypt = require("bcryptjs");
-const { generateJWT } = require("../helpers/jwt");
 
 const getHospitals = async (req, res) => {
+  const hospitals = await Hospital.find().populate("user", "id name");
   res.status(200).json({
     ok: true,
-    msg: "getHospitals",
+    hospitals,
   });
 };
 
@@ -15,7 +14,6 @@ const createHospital = async (req, res = response) => {
     const { name } = req.body;
     const uid = req.uid;
 
-    // Obtener uid del usuario logueado
     const hospital = new Hospital({
       name,
       user: uid,

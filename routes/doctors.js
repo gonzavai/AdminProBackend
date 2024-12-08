@@ -16,9 +16,18 @@ const { verifyToken } = require("../middlewares/verify-token");
 
 const router = Router();
 
-router.get("/", getDoctors);
+router.get("/", verifyToken, getDoctors);
 
-router.post("/", createDoctor);
+router.post(
+  "/",
+  [
+    verifyToken,
+    check("name", "The name is mandatory!").not().isEmpty(),
+    check("hospital_id", "The hospital ID is invalid!").isMongoId(),
+    validateFields
+  ],
+  createDoctor
+);
 
 router.put("/:id", updateDoctor);
 

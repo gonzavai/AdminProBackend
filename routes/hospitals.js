@@ -16,7 +16,7 @@ const { verifyToken } = require("../middlewares/verify-token");
 
 const router = Router();
 
-router.get("/", getHospitals);
+router.get("/", verifyToken, getHospitals);
 
 router.post(
   "/",
