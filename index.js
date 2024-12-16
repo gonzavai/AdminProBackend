@@ -1,17 +1,20 @@
 require("dotenv").config();
 
-const expres = require("express");
+const express = require("express");
 const { dbConnection } = require("./database/db-config");
 const cors = require("cors");
 
 // Server creation
-const app = expres();
+const app = express();
+
+// Carpeta publica
+app.use(express.static("public"));
 
 // Setup CORS
 app.use(cors());
 
 // Read and parse body
-app.use(expres.json());
+app.use(express.json());
 
 //MongoDB config
 //user: mean_user

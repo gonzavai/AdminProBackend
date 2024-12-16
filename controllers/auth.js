@@ -2,6 +2,7 @@ const User = require("../models/user");
 const { response } = require("express");
 const bcrypt = require("bcryptjs");
 const { generateJWT } = require("../helpers/jwt");
+const { verifyGoogleToken } = require("../helpers/verify-google-token");
 
 const login = async (req, res = response) => {
   const { password, email } = req.body;
@@ -43,6 +44,45 @@ const login = async (req, res = response) => {
   }
 };
 
+const googleSignIn = async (req, res = response) => {
+  try {
+    const { token } = req.body;
+
+    // Verificar Token con google
+    const { email, picture, name } = await verifyGoogleToken(token);
+    const userDB = await User.findOne({email});
+    let user;
+    if (!userDB) {
+      user = new User({
+        name,
+        email,
+        password: '@@@',
+        img: picture,
+        google: true
+      })
+    } else {
+      user = userDB;
+      user.google = true;
+    }
+
+    await user.save();
+
+    return res.json({
+      ok: true,
+      token,
+      email,
+      picture,
+      name,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      ok: false,
+      msg: "No se pudo obtener la informmación del usuario. Revisar token",
+    });
+  }
+};
+
 module.exports = {
   login,
+  googleSignIn,
 };
