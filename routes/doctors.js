@@ -24,13 +24,22 @@ router.post(
     verifyToken,
     check("name", "The name is mandatory!").not().isEmpty(),
     check("hospital_id", "The hospital ID is invalid!").isMongoId(),
-    validateFields
+    validateFields,
   ],
   createDoctor
 );
 
-router.put("/:id", updateDoctor);
+router.put(
+  "/:id",
+  [
+    verifyToken,
+    check("name", "The name is mandatory!").not().isEmpty(),
+    check("hospital_id", "The hospital ID is invalid!").isMongoId(),
+    validateFields,
+  ],
+  updateDoctor
+);
 
-router.delete("/:id", deleteDoctor);
+router.delete("/:id", verifyToken, deleteDoctor);
 
 module.exports = router;
