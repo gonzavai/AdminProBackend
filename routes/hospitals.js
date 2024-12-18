@@ -28,7 +28,15 @@ router.post(
   createHospital
 );
 
-router.put("/:id", updateHospital);
+router.put(
+  "/:id",
+  [
+    verifyToken,
+    check("name", "The name is mandatory!").not().isEmpty(),
+    validateFields,
+  ],
+  updateHospital
+);
 
 router.delete("/:id", deleteHospital);
 

@@ -50,16 +50,16 @@ const googleSignIn = async (req, res = response) => {
 
     // Verificar Token con google
     const { email, picture, name } = await verifyGoogleToken(token);
-    const userDB = await User.findOne({email});
+    const userDB = await User.findOne({ email });
     let user;
     if (!userDB) {
       user = new User({
         name,
         email,
-        password: '@@@',
+        password: "@@@",
         img: picture,
-        google: true
-      })
+        google: true,
+      });
     } else {
       user = userDB;
       user.google = true;
@@ -82,7 +82,25 @@ const googleSignIn = async (req, res = response) => {
   }
 };
 
+const renewToken = async (req, res) => {
+  const uid = req.uid;
+  try {
+    const token = await generateJWT(uid);
+    res.json({
+      ok: true,
+      token,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      ok: false,
+      msg: "Error inesperado al intentar renovar el Token!",
+    });
+  }
+};
+
 module.exports = {
   login,
   googleSignIn,
+  renewToken,
 };
