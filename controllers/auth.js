@@ -65,11 +65,13 @@ const googleSignIn = async (req, res = response) => {
       user.google = true;
     }
 
+    // Login con google exitoso
+    const newToken = await generateJWT(userDB.id);
     await user.save();
 
     return res.json({
       ok: true,
-      token,
+      token: newToken,
       email,
       picture,
       name,
@@ -86,9 +88,13 @@ const renewToken = async (req, res) => {
   const uid = req.uid;
   try {
     const token = await generateJWT(uid);
+    
+    // Obtener User por el UID
+    const user = await User.findById(uid);
     res.json({
       ok: true,
       token,
+      user
     });
   } catch (error) {
     console.error(error);

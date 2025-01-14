@@ -21,7 +21,7 @@ router.get("/", verifyToken, getUsers);
 router.post(
   "/",
   [
-    verifyToken,
+    //verifyToken,
     check("name", "The name is mandatory!").not().isEmpty(),
     check("email", "The email is mandatory!").isEmail(),
     check("password", "The password is mandatory!").not().isEmpty(),

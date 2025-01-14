@@ -6,11 +6,6 @@
     <title>Google Sign-in</title>
   </head>
   <body>
-    <h1>Google Sign-In</h1>
-
-    <div id="buttonDiv"></div>
-
-    <script src="https://accounts.google.com/gsi/client" async></script>
     <script>
       function handleCredentialResponse(response) {
         console.log("Encoded JWT ID token: " + response.credential);
