@@ -8,10 +8,12 @@ const getUsers = async (req, res) => {
   const limit = req.query.limit || 5;
 
   const [users, total] = await Promise.all([
-    User.find({}, "name email password role google").skip(offset).limit(limit),
+    User.find({}, "name email password role img google").skip(offset).limit(limit),
 
     User.countDocuments(),
   ]);
+
+  console.log(users)
 
   res.status(200).json({
     ok: true,
