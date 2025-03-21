@@ -92,7 +92,7 @@ const getImage = (req, res = response) => {
     } else {
       const noImagePath = path.join(
         __dirname,
-        `../uploads/no_image_placeholder.jpg`
+        `../uploads/no_image_placeholder.png`
       );
       res.sendFile(noImagePath);
     }
