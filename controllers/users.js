@@ -90,7 +90,14 @@ const updateUser = async (req, res = response) => {
       }
     }
 
-    fields.email = email;
+    if (!userDB.google) {
+      fields.email = email;
+    } else if (userDB.email !== email) {
+      return res.status(400).json({
+        ok: false,
+        msg: "Google user can't change email.",
+      });
+    }
 
     // TODO: Validar token del usuario (para verificar que es el mismo)
 
