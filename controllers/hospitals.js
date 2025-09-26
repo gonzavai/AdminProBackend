@@ -2,10 +2,20 @@ const Hospital = require("../models/hospital");
 const { response } = require("express");
 
 const getHospitals = async (req, res) => {
-  const hospitals = await Hospital.find().populate("user", "id name");
+  const offset = req.query.offset || 0;
+  const limit = req.query.limit || 5;
+
+  const [hospitals, total] = await Promise.all([
+    Hospital.find().skip(offset).limit(limit).populate("user", "id name email"),
+    Hospital.countDocuments(),
+  ]);
+
+  console.log(hospitals);
+
   res.status(200).json({
     ok: true,
     hospitals,
+    total,
   });
 };
 
@@ -45,6 +55,9 @@ const createHospital = async (req, res = response) => {
 
 const updateHospital = async (req, res = response) => {
   const { id } = req.params;
+  const uid = req.uid;
+
+  console.log("#### REQ PARAMS ID:", id);
 
   try {
     // Verificar existencia del hospital
