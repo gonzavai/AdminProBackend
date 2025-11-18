@@ -10,6 +10,7 @@ const {
   createDoctor,
   updateDoctor,
   deleteDoctor,
+  getDoctorById,
 } = require("../controllers/doctors");
 const { validateFields } = require("../middlewares/fields-validator");
 const { verifyToken } = require("../middlewares/verify-token");
@@ -41,5 +42,7 @@ router.put(
 );
 
 router.delete("/:id", verifyToken, deleteDoctor);
+
+router.get("/:id", verifyToken, getDoctorById);
 
 module.exports = router;

@@ -10,8 +10,6 @@ const getHospitals = async (req, res) => {
     Hospital.countDocuments(),
   ]);
 
-  console.log(hospitals);
-
   res.status(200).json({
     ok: true,
     hospitals,

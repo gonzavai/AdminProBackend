@@ -5,14 +5,48 @@ const { generateJWT } = require("../helpers/jwt");
 const Hospital = require("../models/hospital");
 
 const getDoctors = async (req, res) => {
-  const doctors = await Doctor.find()
-    .populate("user", "id name")
-    .populate("hospital", "id name");
+  const offset = req.query.offset || 0;
+  const limit = req.query.limit || 5;
+
+  const [doctors, total] = await Promise.all([
+    Doctor.find()
+      .skip(offset)
+      .limit(limit)
+      .populate("user", "id name email")
+      .populate("hospital", "id name"),
+    Doctor.countDocuments(),
+  ]);
 
   res.status(200).json({
     ok: true,
     doctors,
+    total,
   });
+};
+
+const getDoctorById = async (req, res = response) => {
+  const { id } = req.params;
+  try {
+    const doctor = await Doctor.findById(id)
+      .populate("user", "id name email")
+      .populate("hospital", "id name");
+    if (!doctor) {
+      return res.status(404).json({
+        ok: false,
+        msg: "No se encontró un doctor con ese ID.",
+      });
+    }
+    return res.status(200).json({
+      ok: true,
+      doctor,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      ok: false,
+      msg: "Error inesperado al obtener el doctor por ID.",
+    });
+  }
 };
 
 const createDoctor = async (req, res = response) => {
@@ -22,7 +56,7 @@ const createDoctor = async (req, res = response) => {
 
     // Verificar exitencia del hostpital
     const hospitalDB = await Hospital.findById(hospital_id);
-    
+
     if (!hospitalDB) {
       return res.status(400).json({
         ok: false,
@@ -49,7 +83,7 @@ const createDoctor = async (req, res = response) => {
     // Doctor creado
     return res.status(200).json({
       ok: true,
-      msg: 'Doctor creado',
+      msg: "Doctor creado",
       doctor: doctorDB,
     });
   } catch (error) {
@@ -96,7 +130,7 @@ const updateDoctor = async (req, res = response) => {
     // Doctor actualizado
     return res.json({
       ok: true,
-      msg: 'Doctor actualizado',
+      msg: "Doctor actualizado",
       doctor: updatedDoctor,
     });
   } catch (error) {
@@ -129,7 +163,7 @@ const deleteDoctor = async (req, res = response) => {
     // Doctor eliminado
     return res.json({
       ok: true,
-      msg: 'Doctor eliminado',
+      msg: "Doctor eliminado",
       doctor: deletedDoctor,
     });
   } catch (error) {
@@ -142,6 +176,7 @@ const deleteDoctor = async (req, res = response) => {
 
 module.exports = {
   getDoctors,
+  getDoctorById,
   createDoctor,
   updateDoctor,
   deleteDoctor,

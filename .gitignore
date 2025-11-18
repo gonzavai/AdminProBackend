@@ -1,1 +1,13 @@
 node_modules/
+
+uploads/users/**.jpg
+uploads/hospitals/**.jpg
+uploads/doctors/**.jpg
+
+uploads/users/**.png
+uploads/hospitals/**.png
+uploads/doctors/**.png
+
+uploads/users/**.jpeg
+uploads/hospitals/**.jpeg
+uploads/doctors/**.jpeg
