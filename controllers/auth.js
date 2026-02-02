@@ -3,6 +3,7 @@ const { response } = require("express");
 const bcrypt = require("bcryptjs");
 const { generateJWT } = require("../helpers/jwt");
 const { verifyGoogleToken } = require("../helpers/verify-google-token");
+const { getFrontEndMenu } = require("../helpers/frontend-menu");
 
 const login = async (req, res = response) => {
   const { password, email } = req.body;
@@ -31,10 +32,13 @@ const login = async (req, res = response) => {
     // Login exitoso
     // Generar el TOKEN JWT
     const token = await generateJWT(userDB.id);
+
+    console.log('##### LOGIN EXECUTED', userDB);
     return res.status(200).json({
       ok: true,
       user: userDB,
       token,
+      menu: getFrontEndMenu(userDB.role),
     });
   } catch (error) {
     return res.status(500).json({
@@ -75,6 +79,7 @@ const googleSignIn = async (req, res = response) => {
       email,
       picture,
       name,
+      menu: getFrontEndMenu(userDB.role)
     });
   } catch (error) {
     return res.status(400).json({
@@ -87,14 +92,16 @@ const googleSignIn = async (req, res = response) => {
 const renewToken = async (req, res) => {
   const uid = req.uid;
   try {
+    // Generar un nuevo TOKEN JWT
     const token = await generateJWT(uid);
-    
+
     // Obtener User por el UID
-    const user = await User.findById(uid);
+    const userDB = await User.findById(uid);
     res.json({
       ok: true,
       token,
-      user
+      user: userDB,
+      menu: getFrontEndMenu(userDB.role)
     });
   } catch (error) {
     console.error(error);

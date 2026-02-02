@@ -12,7 +12,11 @@ const {
   deleteUser,
 } = require("../controllers/users");
 const { validateFields } = require("../middlewares/fields-validator");
-const { verifyToken } = require("../middlewares/verify-token");
+const {
+  verifyToken,
+  validateADMIN_ROLE,
+  validateADMIN_ROLEorSameUser,
+} = require("../middlewares/verify-token");
 
 const router = Router();
 
@@ -21,7 +25,8 @@ router.get("/", verifyToken, getUsers);
 router.post(
   "/",
   [
-    //verifyToken,
+    verifyToken,
+    validateADMIN_ROLE,
     check("name", "The name is mandatory!").not().isEmpty(),
     check("email", "The email is mandatory!").isEmail(),
     check("password", "The password is mandatory!").not().isEmpty(),
@@ -34,6 +39,7 @@ router.put(
   "/:id",
   [
     verifyToken,
+    validateADMIN_ROLEorSameUser,
     check("name", "The name is mandatory!").not().isEmpty(),
     check("email", "The email is mandatory!").isEmail(),
     validateFields,
@@ -41,6 +47,6 @@ router.put(
   updateUser
 );
 
-router.delete("/:id", verifyToken, deleteUser);
+router.delete("/:id", verifyToken, validateADMIN_ROLE, deleteUser);
 
 module.exports = router;
