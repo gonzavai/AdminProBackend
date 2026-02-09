@@ -11,3 +11,8 @@ uploads/doctors/**.png
 uploads/users/**.jpeg
 uploads/hospitals/**.jpeg
 uploads/doctors/**.jpeg
+
+# Environment variables
+.env
+.env.local
+.env.*.local
